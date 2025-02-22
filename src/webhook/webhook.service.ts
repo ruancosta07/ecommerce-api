@@ -13,12 +13,12 @@ export class WebhookService {
 
     }
     async handleWebhook(req: RawBodyRequest<Request>, signature: string) {
-        const endPoint = this.configService.get<string>("STRIPE_WEBHOOK_SECRET_PROD")
+        const endPoint = this.configService.get<string>("STRIPE_WEBHOOK_PROD_SECRET")
         let event: Stripe.Event
         try {
             event = this.stripe.get().webhooks.constructEvent(req.rawBody, signature, endPoint)
         } catch (err) {
-            console.log(+ err)
+            console.log(err)
         }
 
 
