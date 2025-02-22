@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../services/prisma';
 import { OrderDto } from './orders.dto';
 import { Request } from "express"
-import { StripeService } from 'src/utils/stripe';
-import { ProductsDto } from 'src/products/products.dto';
+import { StripeService } from '../utils/stripe';
+import { ProductsDto } from '../products/products.dto';
 import Stripe from 'stripe';
 
 @Injectable()

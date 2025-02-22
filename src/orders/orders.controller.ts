@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query, Req } from '@nestjs/c
 import { OrdersService } from './orders.service';
 import { Request } from 'express';
 import { OrderDto } from './orders.dto';
-import { ProductsDto } from 'src/products/products.dto';
+import { ProductsDto } from '../products/products.dto';
 
 @Controller('orders')
 export class OrdersController {

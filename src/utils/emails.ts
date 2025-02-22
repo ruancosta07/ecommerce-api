@@ -1,4 +1,4 @@
-import { ProductsDto } from "src/products/products.dto";
+import { ProductsDto } from "../products/products.dto";
 
 export const successPurchase = ({ products, total, }: { products: ProductsDto[], total: number }) => `<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 

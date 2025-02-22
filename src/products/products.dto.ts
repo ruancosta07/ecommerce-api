@@ -1,4 +1,4 @@
-import { ReviewDto } from "src/reviews/reviews.dto";
+import { ReviewDto } from "../reviews/reviews.dto";
 
 export class ProductsDto {
     id: string;

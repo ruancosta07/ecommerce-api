@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "src/services/prisma";
+import { PrismaService } from "../services/prisma";
 import Stripe from "stripe";
 
 @Injectable()

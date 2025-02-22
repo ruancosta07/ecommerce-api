@@ -1,6 +1,6 @@
 import { Controller, Headers, Post, RawBodyRequest, Req } from '@nestjs/common';
 import { WebhookService } from './webhook.service';
-import { StripeService } from 'src/utils/stripe';
+import { StripeService } from '../utils/stripe';
 import { Request } from 'express';
 
 @Controller('webhook')

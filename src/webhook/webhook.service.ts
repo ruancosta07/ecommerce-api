@@ -1,10 +1,10 @@
 import { Injectable, RawBodyRequest } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { PrismaService } from 'src/services/prisma';
-import { successPurchase } from 'src/utils/emails';
-import { NodemailerService } from 'src/utils/nodemailer';
-import { StripeService } from 'src/utils/stripe';
+import { PrismaService } from '../services/prisma';
+import { successPurchase } from '../utils/emails';
+import { NodemailerService } from '../utils/nodemailer';
+import { StripeService } from '../utils/stripe';
 import Stripe from 'stripe';
 
 @Injectable()
