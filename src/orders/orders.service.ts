@@ -66,7 +66,7 @@ export class OrdersService {
         const products = []
         for (const p of orderProdcts) {
             const foundProduct = await this.stripe.get().products.retrieve(p.price.product as string)
-            products.push({ ...foundProduct, price: p.price.unit_amount / 100 })
+            products.push({ ...foundProduct, price: p.amount_total / 100 })
         }
         return { total, products, expiresAt: alo.expires_at }
     }
