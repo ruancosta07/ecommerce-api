@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  pending
+  approved
+  expired
+  canceled
+}
+
+enum UserRole {
+  client
+  seller
+}
+
+type Adress {
+  zipCode      Int
+  street       String
+  complement   String
+  state        String
+  city         String
+  number       String
+  neighborhood String
+}
+
+type Product {
+  id              String   @db.ObjectId
+  name            String
+  price           Int
+  images          String[]
+  quantity        Int      @default(1)
+  stripeProductId String?
+}
+
+model Users {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String
+  password         String
+  avatar           String?
+  twoStepsAuth     Boolean   @default(false)
+  twoStepsAuthCode Int?
+  adress           Adress?
+  reviews          Reviews[]
+  orders           Orders[]
+  favorites        Product[]
+  cart             Product[]
+  role             UserRole  @default(client)
+}
+
+model Orders {
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String    @db.ObjectId
+  user                  Users?    @relation(fields: [userId], references: [id])
+  status                Status    @default(pending)
+  productId             String    @db.ObjectId
+  product               Products? @relation(fields: [productId], references: [id])
+  estimatedDeliveryDate DateTime
+  price                 Float
+  expireDate            DateTime
+  createdAt             DateTime  @default(now())
+  stripePaymentId       String?
+  stripeSessionId       String
+  checkoutUrl           String
+  checkoutUrlExpiresAt  Int
+}
+
+model Products {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  price           Int
+  description     String
+  images          String[]
+  tags            String[]
+  reviews         Reviews[]
+  order           Orders[]
+  stripeProductId String
+}
+
+model Reviews {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  rating    Float
+  title     String
+  comment   String
+  createdAt DateTime  @default(now())
+  productId String    @db.ObjectId
+  userId    String    @db.ObjectId
+  product   Products? @relation(fields: [productId], references: [id])
+  user      Users?    @relation(fields: [userId], references: [id])
+}
