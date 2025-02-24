@@ -117,17 +117,17 @@ export class UsersService {
                 id
             },
             data: {
-                adress: user.adress ? {...user.adress, zipCode: +user.adress.zipCode} : {...foundUser.adress},
+                adress: user.adress ? { ...user.adress, zipCode: +user.adress.zipCode } : { ...foundUser.adress },
                 name: user.name ? user.name : foundUser.name,
                 email: user.email ? user.email : foundUser.email,
                 avatar: user.avatar ? user.avatar : foundUser.avatar,
-                twoStepsAuth:typeof user.twoStepsAuth !== "undefined" ? user.twoStepsAuth : foundUser.twoStepsAuth,
+                twoStepsAuth: typeof user.twoStepsAuth !== "undefined" ? user.twoStepsAuth : foundUser.twoStepsAuth,
             },
             omit: {
-                password: true,  
+                password: true,
             }
         })
-        return {...updatedUser}
+        return { ...updatedUser }
     }
 
     async changePassword(req: Request, password: string, id: string) {
@@ -168,7 +168,7 @@ export class UsersService {
         if (foundUser.avatar) {
             await this.supabase.getClient().storage.from("utilsBucket").remove([foundUser.avatar.split(imageSplit)[foundUser.avatar.split(imageSplit).length - 1][1]])
         }
-       const {avatar} = await this.prisma.users.update({
+        const { avatar } = await this.prisma.users.update({
             where: {
                 id
             },
@@ -176,10 +176,10 @@ export class UsersService {
                 avatar: publicUrl
             },
             select: {
-                avatar:true
+                avatar: true
             }
         })
-        return {avatar}
+        return { avatar }
     }
 
     async addItemToCart(req: Request, id: string) {
@@ -193,12 +193,12 @@ export class UsersService {
                 price: true,
                 images: true,
                 name: true,
-                stripeProductId:true
+                stripeProductId: true
             }
         })
         if (foundUser.cart.some((p) => p.id === foundProduct.id)) {
             const userCart = foundUser.cart
-            const updatedCart = userCart.map((c) => ({ ...c, quantity: c.quantity + 1,stripeProductId:foundProduct.stripeProductId }))
+            const updatedCart = userCart.map((c) => ({ ...c, quantity: c.quantity + 1, stripeProductId: foundProduct.stripeProductId }))
             const { cart } = await this.prisma.users.update({
                 where: {
                     id: foundUser.id
@@ -224,6 +224,43 @@ export class UsersService {
         })
 
         return userCart.cart
+    }
+    async removeItemFromCart(req: Request, id: string) {
+        const { foundUser } = await this.extractUserFromHeader(req)
+        const foundProduct = await this.prisma.products.findUnique({
+            where: {
+                id
+            },
+            select: {
+                id: true,
+                price: true,
+                images: true,
+                name: true,
+                stripeProductId: true
+            }
+        })
+        if (!foundUser.cart.some((p) => p.id === foundProduct.id)) {
+           throw new BadRequestException()
+        }
+        const {cart} = await this.prisma.users.update({
+            where: {
+                id: foundUser.id
+            },
+            data: {
+                cart: {
+                    deleteMany: {
+                        where: {
+                            id
+                        }
+                    }
+                }
+            },
+            select: {
+                cart: true,
+            }
+        })
+        return cart
+
     }
 
     async decreaseQuantityItemCart(req: Request, id: string) {
@@ -265,7 +302,7 @@ export class UsersService {
     async increaseQuantityItemCart(req: Request, id: string) {
         const { foundUser } = await this.extractUserFromHeader(req)
         const productExistsInUserCart = foundUser.cart.find((p) => p.id === id)
-        if(productExistsInUserCart && productExistsInUserCart.quantity>=1) {
+        if (productExistsInUserCart && productExistsInUserCart.quantity >= 1) {
             const updatedCart = foundUser.cart.map((c) => c.id === id ? ({ ...c, quantity: c.quantity + 1 }) : ({ ...c }))
             const { cart } = await this.prisma.users.update({
                 where: {
@@ -281,10 +318,12 @@ export class UsersService {
     async addItemToFavorites(req: Request, id: string) {
         const { foundUser } = await this.extractUserFromHeader(req)
         const productExists = foundUser.favorites.find((p) => p.id === id)
-        const foundProduct = await this.prisma.products.findUnique({where: {
-            id
-        }})
-        if(!productExists) {
+        const foundProduct = await this.prisma.products.findUnique({
+            where: {
+                id
+            }
+        })
+        if (!productExists) {
             const { favorites } = await this.prisma.users.update({
                 where: {
                     id: foundUser.id
@@ -292,41 +331,99 @@ export class UsersService {
                     favorites: {
                         push: {
                             id: foundProduct.id,
-                            name:foundProduct.name,
+                            name: foundProduct.name,
                             price: foundProduct.price,
                             images: foundProduct.images
                         }
                     },
-                    
+
                 },
                 select: {
-                    favorites:true
+                    favorites: true
                 }
             })
             return favorites
         }
-        else{
+        else {
             const { favorites } = await this.prisma.users.update({
                 where: {
                     id: foundUser.id
                 }, data: {
                     favorites: {
                         deleteMany: {
-                            where:{id: foundProduct.id},
-                            
+                            where: { id: foundProduct.id },
+
                         }
                     },
-                    
+
                 },
                 select: {
-                    favorites:true
+                    favorites: true
                 }
             })
             return favorites
         }
 
     }
-    
+
+    async moveItemToCart(req: Request, id: string) {
+        const { foundUser } = await this.extractUserFromHeader(req)
+        const foundProduct = await this.prisma.products.findUnique({ where: { id } })
+        if (!foundProduct) {
+            throw new BadRequestException()
+        }
+        let updatedUser:UserDto;
+        if (!foundUser.cart.some((p) => p.id === id)) {
+           updatedUser = await this.prisma.users.update({
+                where: {
+                    id: foundUser.id
+                }, data: {
+                    favorites: {
+                        deleteMany: {
+                            where: {
+                                id
+                            }
+                        }
+                    },
+                    cart: {
+                        push: {
+                            id: foundProduct.id,
+                            name: foundProduct.name,
+                            price: foundProduct.price,
+                            images: foundProduct.images,
+                            stripeProductId: foundProduct.stripeProductId
+                        }
+                    }
+                }
+            })
+        }
+        else {
+           updatedUser = await this.prisma.users.update({
+                where: {
+                    id: foundUser.id
+                }, data: {
+                    favorites: {
+                        deleteMany: {
+                            where: {
+                                id
+                            }
+                        }
+                    },
+                    cart: {
+                        updateMany: {
+                            where: {
+                                id
+                            },
+                            data: {
+                                quantity: { increment: 1 }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        return updatedUser
+    }
 
     private async extractUserFromHeader(req: Request) {
         const token = req.headers.authorization.split(" ")[1]
