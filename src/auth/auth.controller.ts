@@ -16,8 +16,8 @@ export class AuthController {
     }
   }})
   @Post("login")
-  login(@Body("email") email:string, @Body("password") password:string):Promise<{user:UserDto} & AuthDto>{
-    return this.authService.login(email,password)
+  login(@Body("email") email:string, @Body("password") password:string, @Body("twoStepsAuthCode") twoStepsAuthCode:string):Promise<{user:UserDto} & AuthDto | {twoStepsAuth:boolean}>{
+    return this.authService.login(email,password, twoStepsAuthCode)
   }
   @Post("verify")
   verify(@Req() req:Request){
