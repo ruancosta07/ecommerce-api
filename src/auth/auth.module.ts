@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../services/prisma';
 import { UsersModule } from '../users/users.module';
+import { NodemailerService } from 'src/utils/nodemailer';
 
 @Module({
   imports: [JwtModule.registerAsync({
@@ -22,6 +23,6 @@ import { UsersModule } from '../users/users.module';
   UsersModule
 ],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService],
+  providers: [AuthService, PrismaService, NodemailerService],
 })
 export class AuthModule {}
