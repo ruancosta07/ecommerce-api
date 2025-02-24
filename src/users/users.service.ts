@@ -117,15 +117,14 @@ export class UsersService {
                 id
             },
             data: {
-                adress: {...user.adress, zipCode: +user.adress.zipCode},
-                name: user.name,
-                email: user.email,
-                avatar: user.avatar,
-                twoStepsAuth: user.twoStepsAuth,
+                adress: user.adress ? {...user.adress, zipCode: +user.adress.zipCode} : {...foundUser.adress},
+                name: user.name ? user.name : foundUser.name,
+                email: user.email ? user.email : foundUser.email,
+                avatar: user.avatar ? user.avatar : foundUser.avatar,
+                twoStepsAuth:typeof user.twoStepsAuth !== "undefined" ? user.twoStepsAuth : foundUser.twoStepsAuth,
             },
             omit: {
-                password: true,
-                twoStepsAuthCode:true,       
+                password: true,  
             }
         })
         return {...updatedUser}
