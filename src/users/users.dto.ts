@@ -22,7 +22,8 @@ export class UserDto {
     password?: string;
     avatar?: string;
     twoStepsAuth: boolean;
-    twoStepsAuthCode?: number;
+    twoStepsAuthCode?: string;
+    twoStepsAuthExpiresAt?:number;
     adress?: {
         zipCode: number;
         street: string;
@@ -37,7 +38,6 @@ export class UserDto {
     favorites: ProductsUserDto[];
     cart: ProductsUserDto[];
     products?: ProductsDto[];
-    role: 'client' | 'seller';
     constructor(partial: Partial<UserDto>) {
         Object.assign(this, partial);
     }
