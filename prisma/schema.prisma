@@ -20,11 +20,6 @@ enum Status {
   canceled
 }
 
-enum UserRole {
-  client
-  seller
-}
-
 type Adress {
   zipCode      Int
   street       String
@@ -45,19 +40,19 @@ type Product {
 }
 
 model Users {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  email            String
-  password         String
-  avatar           String?
-  twoStepsAuth     Boolean   @default(false)
-  twoStepsAuthCode Int?
-  adress           Adress?
-  reviews          Reviews[]
-  orders           Orders[]
-  favorites        Product[]
-  cart             Product[]
-  role             UserRole  @default(client)
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String
+  email                 String
+  password              String
+  avatar                String?
+  twoStepsAuth          Boolean   @default(false)
+  twoStepsAuthCode      String?
+  twoStepsAuthExpiresAt Int?
+  adress                Adress?
+  reviews               Reviews[]
+  orders                Orders[]
+  favorites             Product[]
+  cart                  Product[]
 }
 
 model Orders {
