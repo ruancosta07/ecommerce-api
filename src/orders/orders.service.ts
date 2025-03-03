@@ -43,8 +43,8 @@ export class OrdersService {
         const session = await this.stripe.get().checkout.sessions.create({
             mode: "payment",
             payment_method_types: ["card", "boleto"],
-            success_url: "http://localhost:5173/",
-            cancel_url: "http://localhost:5173/",
+            success_url: "https://ruancosta-urbnx.vercel.app/complete?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url: "https://ruancosta-urbnx.vercel.app/",
             line_items: [
                 {
                     price_data: {
@@ -88,8 +88,8 @@ export class OrdersService {
         const session = await this.stripe.get().checkout.sessions.create({
             mode: "payment",
             payment_method_types: ["card", "boleto"],
-            success_url: "http://localhost:5173/complete?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url: "http://localhost:5173",
+            success_url: "https://ruancosta-urbnx.vercel.app/complete?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url: "https://ruancosta-urbnx.vercel.app/",
             discounts: foundCoupon ? [{ coupon: foundCoupon.data[0].coupon.id }] : [],
             line_items: foundProducts.map((p) => {
                 const price = p.default_price as Stripe.Price
