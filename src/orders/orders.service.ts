@@ -66,7 +66,7 @@ export class OrdersService {
         const products = []
         for (const p of orderProdcts) {
             const foundProduct = await this.stripe.get().products.retrieve(p.price.product as string)
-            products.push({ ...foundProduct, price: p.amount_total / 100 })
+            products.push({ ...foundProduct, price: p.amount_total / 100, quantity:p.quantity })
         }
         return { total, products, expiresAt: alo.expires_at }
     }
@@ -120,7 +120,7 @@ export class OrdersService {
                 status: "pending",
                 stripeSessionId: session.id as string,
                 checkoutUrl: session.url,
-                checkoutUrlExpiresAt: session.expires_at
+                checkoutUrlExpiresAt: session.expires_at,
             })
         })
         const [newOrder, userCart] = await Promise.all([this.prisma.orders.createMany({
