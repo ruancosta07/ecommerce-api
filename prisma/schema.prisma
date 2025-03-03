@@ -70,6 +70,9 @@ model Orders {
   stripeSessionId       String
   checkoutUrl           String
   checkoutUrlExpiresAt  Int
+  reviewed              Boolean   @default(false)
+  review                Reviews?
+  quantity              Int
 }
 
 model Products {
@@ -94,4 +97,6 @@ model Reviews {
   userId    String    @db.ObjectId
   product   Products? @relation(fields: [productId], references: [id])
   user      Users?    @relation(fields: [userId], references: [id])
+  orderId   String    @unique @db.ObjectId
+  order     Orders    @relation(fields: [orderId], references: [id])
 }
