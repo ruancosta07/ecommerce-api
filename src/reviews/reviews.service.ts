@@ -11,7 +11,7 @@ export class ReviewsService {
 
     }
 
-    async getAllReviews(){
+    async getAllReviews() {
         const reviews = await this.prisma.reviews.findMany()
         return reviews
     }
@@ -25,27 +25,40 @@ export class ReviewsService {
         })
         return foundUser.reviews
     }
-    async getSingleReview(id: string):Promise<ReviewDto> {
-        const review = await this.prisma.reviews.findUnique({
-            where: { id },
+    async getSingleReview(id: string): Promise<ReviewDto> {
+        const review = await this.prisma.reviews.findFirst({
+            where: { orderId:id },
         })
         return review
     }
 
-    async addReview(req: Request, review: ReviewDto, id: string) {
+    async addReview(req: Request, review: ReviewDto, id: string, productId:string) {
         const { foundUser } = await this.extractUserFromHeader(req)
-        const userBoughtProduct = await this.prisma.orders.findFirst({
+        const lastPurchase = await this.prisma.orders.findFirst({
             where: {
-                userId: foundUser.id
+                AND: [{
+                    userId:foundUser.id
+                }, {
+                    id
+                }]
             }
         })
         // if (!userBoughtProduct) {
         //     throw new UnauthorizedException()
         // }
-        await this.prisma.reviews.create({
-            data: { ...review, userId: foundUser.id, productId: id }
-        })
-        throw new HttpException("Avaliação criada com sucesso", 201)
+        const [updatedOrder] =  await Promise.all([this.prisma.orders.update({
+            where:{
+                id:lastPurchase.id
+            },
+            data: {
+                reviewed:true
+            }
+        }),
+         this.prisma.reviews.create({
+            data: { title: review.title, comment: review.comment, rating: review.rating, userId: foundUser.id, productId: productId, orderId:lastPurchase.id }
+        })])
+        
+        return updatedOrder
     }
 
 
