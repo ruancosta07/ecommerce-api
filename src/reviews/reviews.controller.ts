@@ -22,8 +22,8 @@ export class ReviewsController {
   }
 
   @Post("create/:id")
-  createReview(@Req() req: Request, @Body() review: ReviewDto, @Param("id") id: string) {
-    return this.reviewsService.addReview(req, review, id)
+  createReview(@Req() req: Request, @Body() review: ReviewDto, @Param("id") id: string, @Body("productId") productId:string) {
+    return this.reviewsService.addReview(req, review, id, productId)
   }
 
 }
