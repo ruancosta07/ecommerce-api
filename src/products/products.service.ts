@@ -44,14 +44,15 @@ export class ProductsService {
         return new ProductsDto(foundProduct)
     }
 
-    async getProductByQuery(categoria:string,pagina:string, limite:string, max:string, min:string, order: "desc" | "asc" | "undefined") {
+    async getProductByQuery(produto:string,pagina:string, limite:string, max:string, min:string, order: "desc" | "asc" | "undefined") {
         const pageNumber = parseInt(pagina, 10) || 1;
         const pageSize = parseInt(limite, 10) || 20;
         const skip = (pageNumber - 1) * pageSize
         const queryParamsProducts = await this.prisma.products.findMany({
             where:{
-                tags:{
-                    has:categoria
+                name:{
+                    contains:produto,
+                    mode: "insensitive"
                 },
                 price: {
                     gte: Number(min) || 0,
@@ -68,15 +69,16 @@ export class ProductsService {
         })
         const clearProducts = await this.prisma.products.findMany({
             where: {
-                tags: {
-                    has:categoria
+                name: {
+                    contains:produto,
+                    mode: "insensitive"
                 }
             },
             include: {
                 reviews:true
             }
         })
-        const total = await this.prisma.products.count({where: {tags: {has:categoria}},})
+        const total = await this.prisma.products.count({where: {name: {contains:produto, mode: "insensitive"}},})
         const totalPages = Math.ceil(total / pageSize)
         return {products:queryParamsProducts, clearProducts, total, totalPages}
     }   
