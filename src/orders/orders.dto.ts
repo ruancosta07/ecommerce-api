@@ -10,5 +10,6 @@ export class OrderDto {
     stripeSessionId:string
     checkoutUrl:string
     checkoutUrlExpiresAt:number
+    quantity:number
   }
   
