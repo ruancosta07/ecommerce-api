@@ -18,6 +18,10 @@ export class ProductsController {
   search(@Query("categoria") categoria:string, @Query("pagina") pagina:string, @Query("limite") limite:string, @Query("max") max:string, @Query("min") min:string,  @Query("order") order: "desc" | "asc" | "undefined") {
     return this.productsService.getProductByQuery(categoria,pagina,limite, max, min, order)
   }
+  @Get("search")
+  searchProductByName(@Query("produto") produto:string, @Query("pagina") pagina:string, @Query("limite") limite:string, @Query("max") max:string, @Query("min") min:string,  @Query("order") order: "desc" | "asc" | "undefined") {
+    return this.productsService.getProductByQuery(produto,pagina,limite, max, min, order)
+  }
 
   @Get("search")
   searchProduct(@Query("busca") busca:string){
