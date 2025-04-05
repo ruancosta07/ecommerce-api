@@ -71,13 +71,13 @@ export class AuthService {
            const decodedToken = await this.jwtService.verifyAsync(token, {
                 secret: this.configService.get("JWT_SECRET")
             }) as {
-                sub:string;
+                id:string;
                 email:string;
                 name:string
             }
             const foundUser = await this.prisma.users.findUnique({
                 where: {
-                    id:decodedToken.sub
+                    id:decodedToken.id
                 },
                 omit: {
                     password:true,
@@ -87,7 +87,8 @@ export class AuthService {
             })
 
             return {...foundUser}
-        } catch{
+        } catch (err){
+            console.log(err)
             throw new UnauthorizedException()
         }
 
