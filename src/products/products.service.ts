@@ -186,11 +186,11 @@ export class ProductsService {
         const decodedToken = await this.jwtService.verifyAsync(token, {
             secret: this.configService.get("JWT_SECRET")
         }) as {
-            sub: string;
+            id: string;
         }
         const foundUser = await this.prisma.users.findUnique({
             where: {
-                id: decodedToken.sub
+                id: decodedToken.id
             }
         })
         return { foundUser }

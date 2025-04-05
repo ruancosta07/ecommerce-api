@@ -71,13 +71,13 @@ export class ReviewsService {
         const decodedToken = await this.jwtService.verify(token, {
             secret: this.configService.get("JWT_SECRET")
         }) as {
-            sub: string;
+            id: string;
             name: string;
             email: string
         }
         const foundUser = await this.prisma.users.findUnique({
             where: {
-                id: decodedToken.sub
+                id: decodedToken.id
             }
         })
         if (!foundUser) {

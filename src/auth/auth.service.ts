@@ -40,7 +40,7 @@ export class AuthService {
                 throw new UnauthorizedException()
             }
             const payload = {
-                sub: foundUser.id,
+                id: foundUser.id,
                 email: foundUser.email,
                 name: foundUser.name
             }
@@ -51,7 +51,7 @@ export class AuthService {
             throw new UnauthorizedException()
         }
         const payload = {
-            sub: foundUser.id,
+            id: foundUser.id,
             email: foundUser.email,
             name: foundUser.name
         }
@@ -85,7 +85,7 @@ export class AuthService {
                 },
                 
             })
-
+            console.log(foundUser)
             return {...foundUser}
         } catch (err){
             console.log(err)

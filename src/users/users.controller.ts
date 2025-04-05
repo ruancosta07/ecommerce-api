@@ -68,6 +68,10 @@ export class UsersController {
   addItemToFavorites(@Req() req:Request, @Param("id") id:string){
     return this.usersService.addItemToFavorites(req,id)
   }
+  @Patch("favorites/remove/:id")
+  removeFromFavorites(@Req() req:Request, @Param("id") id:string){
+    return this.usersService.removeItemFromFavorites(req,id)
+  }
 
   @Post("/favorites/move-item")
   move(@Req() req:Request, @Body("id") id:string){

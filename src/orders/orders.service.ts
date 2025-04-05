@@ -107,6 +107,7 @@ export class OrdersService {
 
         })
 
+
         const formatedOrder: OrderDto[] = order.map((o,i) => {
             const price = foundProducts[i].default_price as Stripe.Price
             const priceWithDiscount = price.unit_amount * (foundCoupon?.data[0].coupon.percent_off / 100)
@@ -168,11 +169,11 @@ export class OrdersService {
         const decodedToken = await this.jwtService.verifyAsync(token, {
             secret: this.configService.get("JWT_SECRET")
         }) as {
-            sub: string;
+            id: string;
         }
         const foundUser = await this.prisma.users.findUnique({
             where: {
-                id: decodedToken.sub
+                id: decodedToken.id
             },
             include: {
                 orders: true

@@ -21,13 +21,13 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get("JWT_SECRET")
       }) as {
-        sub:string;
+        id:string;
         name:string;
         email:string
       }
       const foundUser = await this.prisma.users.findUnique({
         where: {
-          id: payload.sub
+          id: payload.id
         }
       })
       

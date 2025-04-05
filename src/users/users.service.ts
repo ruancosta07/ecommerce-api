@@ -51,7 +51,7 @@ export class UsersService {
         const decodedToken = await this.jwtService.verifyAsync(token, {
             secret: this.configService.get("JWT_SECRET")
         }) as {
-            sub: string;
+            id: string;
             name: string;
             email: string
         }
@@ -59,7 +59,7 @@ export class UsersService {
 
             this.prisma.users.findUnique({
                 where: {
-                    id: decodedToken.sub
+                    id: decodedToken.id
                 }
             }),
             this.prisma.users.findUnique({
@@ -262,6 +262,43 @@ export class UsersService {
         return cart
 
     }
+    async removeItemFromFavorites(req: Request, id: string) {
+        const { foundUser } = await this.extractUserFromHeader(req)
+        const foundProduct = await this.prisma.products.findUnique({
+            where: {
+                id
+            },
+            select: {
+                id: true,
+                price: true,
+                images: true,
+                name: true,
+                stripeProductId: true
+            }
+        })
+        if (!foundUser.favorites.some((p) => p.id === foundProduct.id)) {
+           throw new BadRequestException()
+        }
+        const {favorites} = await this.prisma.users.update({
+            where: {
+                id: foundUser.id
+            },
+            data: {
+                favorites: {
+                    deleteMany: {
+                        where: {
+                            id
+                        }
+                    }
+                }
+            },
+            select: {
+                favorites: true,
+            }
+        })
+        return favorites
+
+    }
 
     async decreaseQuantityItemCart(req: Request, id: string) {
         const { foundUser } = await this.extractUserFromHeader(req)
@@ -430,13 +467,13 @@ export class UsersService {
         const decodedToken = await this.jwtService.verify(token, {
             secret: this.configService.get("JWT_SECRET")
         }) as {
-            sub: string;
+            id: string;
             email: string;
             name: string
         }
         const foundUser = await this.prisma.users.findUnique({
             where: {
-                id: decodedToken.sub
+                id: decodedToken.id
             }
         })
         if (!foundUser) {
