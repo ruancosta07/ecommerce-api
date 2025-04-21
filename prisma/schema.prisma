@@ -41,13 +41,15 @@ type Product {
 
 model Users {
   id                    String    @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String
+  name                  String?
   email                 String
-  password              String
+  password              String?
   avatar                String?
   twoStepsAuth          Boolean   @default(false)
   twoStepsAuthCode      String?
   twoStepsAuthExpiresAt Int?
+  provider              String?
+  providerId            String?
   adress                Adress?
   reviews               Reviews[]
   orders                Orders[]
