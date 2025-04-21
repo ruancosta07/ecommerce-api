@@ -12,9 +12,9 @@ import { WebhookController } from './webhook/webhook.controller';
 import { WebhookModule } from './webhook/webhook.module';
 import { NodemailerService } from './utils/nodemailer';
 @Module({
-  imports: [ UsersModule, AuthModule, ProductsModule, ReviewsModule, OrdersModule, ConfigModule.forRoot({isGlobal:true, envFilePath: ".env"}), WebhookModule],
-  providers: [PrismaService,StripeService, WebhookService, NodemailerService],
+  imports: [UsersModule, AuthModule, ProductsModule, ReviewsModule, OrdersModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }), WebhookModule],
+  providers: [PrismaService, StripeService, WebhookService, NodemailerService],
   exports: [StripeService, NodemailerService],
   controllers: [WebhookController],
 })
-export class AppModule {}
+export class AppModule { }
