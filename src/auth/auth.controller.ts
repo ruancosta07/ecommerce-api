@@ -44,7 +44,7 @@ export class AuthController {
   @UseGuards(AuthGuard("google"))
   async googleRedirect(@Req()req:GoogleRequest, @Res() res:Response){
     const {jwtToken} = req.user 
-    return res.redirect(`http://localhost:5173/login?token=${jwtToken}`)
+    return res.redirect(`https://ruancosta-urbnx.vercel.app/login?token=${jwtToken}`)
   }
 
   @Get("github")
@@ -57,6 +57,6 @@ export class AuthController {
   @UseGuards(AuthGuard("github"))
   async githubRedirect(@Req()req:GoogleRequest, @Res() res:Response){
     const {jwtToken} = req.user 
-    return res.redirect(`http://localhost:5173/login?token=${jwtToken}`)
+    return res.redirect(`https://ruancosta-urbnx.vercel.app/login?token=${jwtToken}`)
   }
 }
