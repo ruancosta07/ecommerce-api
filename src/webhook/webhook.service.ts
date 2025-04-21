@@ -90,7 +90,6 @@ export class WebhookService {
                     product: product.id,
                     active: true
                 })
-                console.log(product)
                 await this.prisma.products.create({
                     data: {
                         description: product.description || "",

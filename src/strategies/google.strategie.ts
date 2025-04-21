@@ -3,8 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, VerifyCallback } from "passport-google-oauth2";
-import { PrismaService } from "src/services/prisma";
-import { UserDto } from "src/users/users.dto";
+import { PrismaService } from "../services/prisma";
+import { UserDto } from "../users/users.dto";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {

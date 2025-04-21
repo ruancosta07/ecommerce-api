@@ -5,10 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../services/prisma';
 import { UsersModule } from '../users/users.module';
-import { NodemailerService } from 'src/utils/nodemailer';
+import { NodemailerService } from '../utils/nodemailer';
 import { PassportModule } from '@nestjs/passport';
-import { GoogleStrategy } from 'src/strategies/google.strategie';
-import { GithubStrategy } from 'src/strategies/github.strategie';
+import { GoogleStrategy } from '../strategies/google.strategie';
+import { GithubStrategy } from '../strategies/github.strategie';
 
 @Module({
   imports: [

@@ -6,7 +6,7 @@ import { compare } from "bcrypt"
 import { UserDto } from '../users/users.dto';
 import { AuthDto } from './auth.dto';
 import { Request } from 'express';
-import { NodemailerService } from 'src/utils/nodemailer';
+import { NodemailerService } from '../utils/nodemailer';
 @Injectable()
 export class AuthService {
     private jwtExpirationTime: number;
