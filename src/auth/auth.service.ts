@@ -82,10 +82,13 @@ export class AuthService {
                 omit: {
                     password:true,
                     twoStepsAuthCode:true,
+                    providerId:true
                 },
                 
             })
-            console.log(foundUser)
+            if(!foundUser){
+                throw new UnauthorizedException()
+            }
             return {...foundUser}
         } catch (err){
             console.log(err)
